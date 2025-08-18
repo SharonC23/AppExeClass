@@ -2,40 +2,62 @@ package com.miApp.AppS.Impl;
 
 
 import com.miApp.AppS.dto.FinancialProjectionDTO;
+import com.miApp.AppS.entity.FinancialProjection;
+import com.miApp.AppS.exceptions.CustomException;
+import com.miApp.AppS.repository.FinancialProjectionRepository;
 import com.miApp.AppS.service.FinancialProjectionService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class FinancialProjectionServiceImpl implements FinancialProjectionService {
 
-    private final FinancialProjectionService financialProjectionService;
-    public FinancialProjectionServiceImpl(FinancialProjectionService financialProjectionService) {
-        this.financialProjectionService = financialProjectionService;
-    }
-    @Autowired
-    public FinancialProjectionServiceImpl() {
-        this.financialProjectionService = null; // This is not a good practice, but included to match the constructor signature.
+    private final FinancialProjectionRepository financialProjectionRepository;
+    private final ModelMapper modelMapper;
 
+    @Autowired
+    public FinancialProjectionServiceImpl(FinancialProjectionRepository financialProjectionRepository, ModelMapper modelMapper) {
+        this.financialProjectionRepository = financialProjectionRepository;
+        this.modelMapper = modelMapper;
     }
+
+    @Override
+    public List<FinancialProjectionDTO> getAllFinancialProjections() {
+        List<FinancialProjection> financialProjections = financialProjectionRepository.findAll();
+        return financialProjections.stream()
+                .map(financialProjection -> modelMapper.map(financialProjection, FinancialProjectionDTO.class))
+                .collect(Collectors.toList());
+    }
+
     @Override
     public FinancialProjectionDTO findAllFinancialProjections() {
         return null;
     }
 
     @Override
-    public FinancialProjectionDTO createFinancialProjection(FinancialProjectionDTO financialProjectionDTO) {
-        return null;
+    public FinancialProjectionDTO getFinancialProjectionById(Long financialProjectionId) {
+        FinancialProjection financialProjection = financialProjectionRepository.findById(financialProjectionId)
+                .orElseThrow(() -> new RuntimeException("Financial projection not found with id: " + financialProjectionId));
+        return modelMapper.map(financialProjection, FinancialProjectionDTO.class);
     }
 
     @Override
-    public FinancialProjectionDTO getFinancialProjectionById(Long financialProjectionId) {
-        return null;
+    public FinancialProjectionDTO createFinancialProjection(FinancialProjectionDTO financialProjectionDTO) {
+        if (financialProjectionRepository.findById(financialProjectionDTO.getIdProjection()).isPresent()) {
+            throw new RuntimeException("Financial projection with this ID already exists");
+        }
+        FinancialProjection financialProjection = modelMapper.map(financialProjectionDTO, FinancialProjection.class);
+        financialProjection = financialProjectionRepository.save(financialProjection);
+        return modelMapper.map(financialProjection, FinancialProjectionDTO.class);
     }
 
     @Override
     public FinancialProjectionDTO updateFinancialProjection(Long financialProjectionId, FinancialProjectionDTO financialProjectionDTO) {
-        return null;
+       return null;
     }
 
     @Override

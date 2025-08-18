@@ -2,7 +2,11 @@ package com.miApp.AppS.service;
 
 import com.miApp.AppS.dto.CapitalizationSettingsDTO;
 
+import java.util.List;
+
 public interface CapitalizationSettingsService {
+
+    List<CapitalizationSettingsDTO> getAllCapitalizationSettings();
 
     CapitalizationSettingsDTO findAllCapitalizationSettings();
 

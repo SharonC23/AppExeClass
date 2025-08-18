@@ -10,6 +10,6 @@ import java.util.Optional;
 @Repository
 public interface FinancialProjectionRepository extends JpaRepository<FinancialProjection, Long> {
 
-   Optional <FinancialProjection> findById(Long id);
+   FinancialProjection findByIdFinancialProjection(Long idFinancialProjection);
 
 }
