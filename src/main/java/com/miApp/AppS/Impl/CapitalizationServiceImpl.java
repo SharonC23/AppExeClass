@@ -55,6 +55,7 @@ public class CapitalizationServiceImpl implements CapitalizationSettingsService 
         return null;
     }
 
+
     @Override
     public void deleteCapitalizationSettings(Long idCapitalizationSettings) {
 

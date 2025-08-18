@@ -13,7 +13,7 @@ public interface FinancialProjectionService {
     FinancialProjectionDTO createFinancialProjection(FinancialProjectionDTO financialProjectionDTO);
     FinancialProjectionDTO getFinancialProjectionById(Long financialProjectionId);
     FinancialProjectionDTO updateFinancialProjection(Long financialProjectionId, FinancialProjectionDTO financialProjectionDTO);
-    void deleteFinancialProjection(Long financialProjectionId);
+    boolean deleteFinancialProjection(Long financialProjectionId);
 
 
 }

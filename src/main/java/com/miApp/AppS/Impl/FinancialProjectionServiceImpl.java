@@ -41,14 +41,14 @@ public class FinancialProjectionServiceImpl implements FinancialProjectionServic
     @Override
     public FinancialProjectionDTO getFinancialProjectionById(Long financialProjectionId) {
         FinancialProjection financialProjection = financialProjectionRepository.findById(financialProjectionId)
-                .orElseThrow(() -> new RuntimeException("Financial projection not found with id: " + financialProjectionId));
+                .orElseThrow(() -> new CustomException("Financial projection not found with id: " + financialProjectionId));
         return modelMapper.map(financialProjection, FinancialProjectionDTO.class);
     }
 
     @Override
     public FinancialProjectionDTO createFinancialProjection(FinancialProjectionDTO financialProjectionDTO) {
         if (financialProjectionRepository.findById(financialProjectionDTO.getIdProjection()).isPresent()) {
-            throw new RuntimeException("Financial projection with this ID already exists");
+            throw new CustomException("Financial projection with this ID already exists");
         }
         FinancialProjection financialProjection = modelMapper.map(financialProjectionDTO, FinancialProjection.class);
         financialProjection = financialProjectionRepository.save(financialProjection);
@@ -57,11 +57,20 @@ public class FinancialProjectionServiceImpl implements FinancialProjectionServic
 
     @Override
     public FinancialProjectionDTO updateFinancialProjection(Long financialProjectionId, FinancialProjectionDTO financialProjectionDTO) {
-       return null;
+        FinancialProjection financialProjection = financialProjectionRepository.findById(financialProjectionId)
+                .orElseThrow(() -> new CustomException("Financial projection not found with id: " + financialProjectionId));
+        financialProjection.setAmount(financialProjectionDTO.getAmount());
+        financialProjection.setDescriptionProjection(financialProjectionDTO.getDescriptionProjection());
+        FinancialProjection updatedFinancialProjection = financialProjectionRepository.save(financialProjection);
+        return modelMapper.map(updatedFinancialProjection, FinancialProjectionDTO.class);
     }
 
     @Override
-    public void deleteFinancialProjection(Long financialProjectionId) {
-
+    public boolean deleteFinancialProjection(Long financialProjectionId) {
+        if(!financialProjectionRepository.existsById(financialProjectionId)) {
+            throw new CustomException("Financial projection not found with id: " + financialProjectionId);
+        }
+        financialProjectionRepository.deleteById(financialProjectionId);
+        return true;
     }
 }

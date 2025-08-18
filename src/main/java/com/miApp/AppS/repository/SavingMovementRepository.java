@@ -10,6 +10,6 @@ import java.util.Optional;
 @Repository
 public interface SavingMovementRepository extends JpaRepository<SavingMovement, Long>{
 
-    SavingMovement findByIdSavingMovement(Long idSavingMovement);
+    SavingMovement findByIdSaving(Long idSaving);
 
 }
